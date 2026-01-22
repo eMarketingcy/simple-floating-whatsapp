@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Simple Floating WhatsApp (Modular)
- * Description: A professional, modular, and lightweight WhatsApp floating button.
- * Version: 2.0.0
+ * Plugin Name: eM WhatsApp - Floating Button
+ * Description: A modern, professional, and fully customizable WhatsApp floating button with 2026 UI/UX design standards.
+ * Version: 3.0.0
  * Author: eMarketing Cyprus by Saltpixel Ltd
  * Author URI: https://www.emarketingcyprus.cy
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 5.0
- * Requires PHP: 7.2
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
  * Text Domain: simple-floating-whatsapp
  */
 
