@@ -1,28 +1,66 @@
+/**
+ * eM WhatsApp - Modern 2026 UI/UX Design
+ * Featuring glassmorphism, smooth animations, and mobile-first responsive design
+ * Version: 3.0.0
+ */
+
 :root {
-  --sfw-green: #25d366;
-  --sfw-dark-green: #128c7e;
+  /* 2026 Color Palette */
+  --sfw-primary: #25d366;
+  --sfw-primary-dark: #128c7e;
+  --sfw-primary-light: #2ae06e;
   --sfw-white: #ffffff;
-  --sfw-size: 64px;
-  --sfw-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-  --sfw-glass: rgba(255, 255, 255, 0.1);
+  --sfw-shadow-color: rgba(37, 211, 102, 0.4);
+
+  /* Dynamic Sizing (Mobile-First) */
+  --sfw-size: clamp(56px, 15vw, 68px);
+  --sfw-icon-size: clamp(28px, 8vw, 34px);
+
+  /* Glassmorphism Variables */
+  --sfw-glass-bg: rgba(37, 211, 102, 0.95);
+  --sfw-glass-blur: blur(10px);
+  --sfw-glass-border: rgba(255, 255, 255, 0.2);
+
+  /* Shadows */
+  --sfw-shadow-sm: 0 4px 16px var(--sfw-shadow-color);
+  --sfw-shadow-md: 0 8px 28px rgba(37, 211, 102, 0.5);
+  --sfw-shadow-lg: 0 16px 48px rgba(37, 211, 102, 0.6);
+
+  /* Timing Functions (2026 Standards) */
+  --sfw-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --sfw-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --sfw-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+/* =================================================================
+   Main Container
+   ================================================================= */
 
 .sfw-wrapper {
   position: fixed;
-  z-index: 99999;
-  /* Modern CSS Clamp for responsive bottom spacing */
-  bottom: clamp(20px, 5vh, 40px);
-  /* Safe area for modern mobile devices (iPhone Home Bar) */
-  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 999999;
+  bottom: clamp(20px, 4vh, 32px);
+
+  /* Safe area support for modern devices (notches, home bars) */
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  padding-left: max(env(safe-area-inset-left), 0px);
+  padding-right: max(env(safe-area-inset-right), 0px);
+
+  /* Smooth entrance animation */
+  animation: sfw-slideIn 0.6s var(--sfw-ease-spring) 0.3s backwards;
 }
 
 .sfw-right {
-  right: clamp(20px, 5vw, 40px);
+  right: clamp(20px, 4vw, 32px);
 }
 
 .sfw-left {
-  left: clamp(20px, 5vw, 40px);
+  left: clamp(20px, 4vw, 32px);
 }
+
+/* =================================================================
+   WhatsApp Button (2026 Glassmorphism Design)
+   ================================================================= */
 
 .sfw-button {
   display: flex;
@@ -30,59 +68,257 @@
   justify-content: center;
   width: var(--sfw-size);
   height: var(--sfw-size);
-  background: var(--sfw-green);
-  /* Glassmorphism gradient overlay */
-  background: linear-gradient(145deg, #2ae06e, #22be5c);
+
+  /* Glassmorphism Background */
+  background: linear-gradient(135deg, var(--sfw-primary-light) 0%, var(--sfw-primary) 50%, var(--sfw-primary-dark) 100%);
+  backdrop-filter: var(--sfw-glass-blur);
+  -webkit-backdrop-filter: var(--sfw-glass-blur);
+
+  /* Modern border with subtle transparency */
+  border: 2px solid var(--sfw-glass-border);
+
   color: var(--sfw-white);
   border-radius: 50%;
-  box-shadow: var(--sfw-shadow);
+  box-shadow: var(--sfw-shadow-sm);
   text-decoration: none;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
   position: relative;
+  cursor: pointer;
+  overflow: hidden;
+
+  /* Smooth transitions */
+  transition:
+    transform 0.4s var(--sfw-ease-spring),
+    box-shadow 0.4s var(--sfw-ease-smooth),
+    background 0.3s ease;
+
+  /* Touch-optimized for mobile (44x44px minimum) */
+  min-width: 44px;
+  min-height: 44px;
+
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover Effect: Scale Up */
+/* Shimmer effect overlay (subtle) */
+.sfw-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%
+  );
+  animation: sfw-shimmer 3s infinite;
+  pointer-events: none;
+}
+
+/* =================================================================
+   Hover & Active States (Desktop + Touch)
+   ================================================================= */
+
 .sfw-button:hover {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.6);
+  transform: scale(1.12) translateY(-4px);
+  box-shadow: var(--sfw-shadow-lg);
+  background: linear-gradient(135deg, #2ae06e 0%, var(--sfw-primary) 50%, var(--sfw-primary-dark) 100%);
 }
 
-/* Icon Styling */
+.sfw-button:active {
+  transform: scale(1.05) translateY(-2px);
+  transition-duration: 0.1s;
+}
+
+/* Focus state for accessibility (keyboard navigation) */
+.sfw-button:focus-visible {
+  outline: 3px solid var(--sfw-primary);
+  outline-offset: 4px;
+}
+
+/* =================================================================
+   Icon Styling
+   ================================================================= */
+
+.sfw-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .sfw-icon svg {
-  width: 32px;
-  height: 32px;
+  width: var(--sfw-icon-size);
+  height: var(--sfw-icon-size);
   fill: currentColor;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s var(--sfw-ease-bounce);
 }
 
-/* The Pulsing Ring (Ripple) */
+.sfw-button:hover .sfw-icon svg {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* =================================================================
+   Pulsing Ring Animation (Attention Grabber)
+   ================================================================= */
+
 .sfw-pulse {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 2px solid var(--sfw-green);
+  border: 3px solid var(--sfw-primary);
   opacity: 0;
   z-index: -1;
-  animation: sfw-ripple 2.5s infinite;
+  animation: sfw-ripple 2.5s ease-out infinite;
+  pointer-events: none;
 }
+
+/* =================================================================
+   Keyframe Animations
+   ================================================================= */
 
 @keyframes sfw-ripple {
   0% {
-    transform: scale(1);
-    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.4;
   }
   100% {
-    transform: scale(1.6);
+    transform: translate(-50%, -50%) scale(1.8);
     opacity: 0;
   }
 }
 
-/* 2026 Mobile Optimization */
+@keyframes sfw-slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sfw-shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* =================================================================
+   Responsive Design - Mobile Optimizations (2026)
+   ================================================================= */
+
 @media (max-width: 768px) {
   :root {
-    --sfw-size: 56px; /* Slightly smaller on mobile */
+    --sfw-size: clamp(54px, 14vw, 60px);
+    --sfw-icon-size: clamp(26px, 7vw, 30px);
+  }
+
+  .sfw-wrapper {
+    bottom: clamp(16px, 3vh, 24px);
+  }
+
+  .sfw-right {
+    right: clamp(16px, 3vw, 24px);
+  }
+
+  .sfw-left {
+    left: clamp(16px, 3vw, 24px);
+  }
+
+  /* Enhanced touch target for better UX */
+  .sfw-button {
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  /* Disable hover effects on touch devices */
+  @media (hover: none) {
+    .sfw-button:hover {
+      transform: none;
+      box-shadow: var(--sfw-shadow-sm);
+    }
+  }
+
+  /* Touch feedback */
+  .sfw-button:active {
+    transform: scale(0.95);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --sfw-size: 52px;
+    --sfw-icon-size: 26px;
+  }
+}
+
+/* =================================================================
+   Dark Mode Support (2026 Standard)
+   ================================================================= */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sfw-shadow-color: rgba(37, 211, 102, 0.5);
+    --sfw-glass-border: rgba(255, 255, 255, 0.15);
+  }
+
+  .sfw-button {
+    box-shadow: var(--sfw-shadow-md);
+  }
+}
+
+/* =================================================================
+   Reduced Motion Support (Accessibility)
+   ================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .sfw-wrapper {
+    animation: none;
+  }
+
+  .sfw-button {
+    transition: opacity 0.2s ease;
+  }
+
+  .sfw-pulse {
+    animation: none;
+    display: none;
+  }
+
+  .sfw-button::before {
+    animation: none;
+  }
+
+  .sfw-button:hover {
+    transform: none;
+  }
+}
+
+/* =================================================================
+   Print Styles (Hide button when printing)
+   ================================================================= */
+
+@media print {
+  .sfw-wrapper {
+    display: none !important;
   }
 }
