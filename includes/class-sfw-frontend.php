@@ -39,10 +39,12 @@ class SFW_Frontend {
             true
         );
 
-        // Pass data to JavaScript
+        // Pass data to JavaScript (including AJAX tracking endpoint)
         wp_localize_script( 'sfw-script', 'sfwData', [
-            'phone' => $phone,
+            'phone'   => $phone,
             'message' => $options['message'] ?? '',
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'sfw_tracking_nonce' ),
         ] );
     }
 
