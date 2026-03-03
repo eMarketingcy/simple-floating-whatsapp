@@ -1,7 +1,7 @@
 /**
  * eM WhatsApp - Modern JavaScript Module
- * Enhanced with ES6+, accessibility, and analytics tracking
- * Version: 3.0.0
+ * Enhanced with ES6+, accessibility, analytics tracking, and server-side click recording
+ * Version: 3.1.0
  */
 
 (function() {
@@ -86,15 +86,52 @@
             // Add visual click feedback
             this.addClickAnimation();
 
-            // Track click event
+            // Track click event (client-side analytics)
             this.trackEvent('click', {
                 phone: this.button.dataset.sfwPhone || 'unknown',
                 position: this.wrapper?.dataset.sfwPosition || 'unknown',
                 clickCount: this.clickCount
             });
 
-            // Log to console (can be removed in production)
-            console.log(`[eM WhatsApp] Button clicked (${this.clickCount} times)`);
+            // Record click on server (for leads & analytics dashboard)
+            this.recordClick();
+        }
+
+        /**
+         * Send click data to server via AJAX for lead tracking
+         */
+        recordClick() {
+            // Check if sfwData with AJAX config is available
+            if (typeof sfwData === 'undefined' || !sfwData.ajaxUrl || !sfwData.nonce) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'sfw_track_click');
+            formData.append('nonce', sfwData.nonce);
+            formData.append('page_url', window.location.href);
+            formData.append('page_title', document.title);
+
+            // Use sendBeacon for reliability (won't be cancelled on page navigation)
+            if (navigator.sendBeacon) {
+                // sendBeacon requires a Blob or URLSearchParams
+                const params = new URLSearchParams();
+                params.append('action', 'sfw_track_click');
+                params.append('nonce', sfwData.nonce);
+                params.append('page_url', window.location.href);
+                params.append('page_title', document.title);
+
+                navigator.sendBeacon(sfwData.ajaxUrl, params);
+            } else {
+                // Fallback to fetch
+                fetch(sfwData.ajaxUrl, {
+                    method: 'POST',
+                    body: formData,
+                    keepalive: true
+                }).catch(() => {
+                    // Silent fail - don't interrupt user experience
+                });
+            }
         }
 
         /**
